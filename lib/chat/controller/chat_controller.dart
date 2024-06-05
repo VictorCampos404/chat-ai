@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ifsp_ai/common/base/status.dart';
 import 'package:ifsp_ai/common/enum/status.dart';
 import 'package:ifsp_ai/chat/models/message.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 
 class ChatController extends BaseStatus {
   TextEditingController inputCtrl = TextEditingController();
@@ -9,6 +10,7 @@ class ChatController extends BaseStatus {
   bool get sendButtonEnable => inputCtrl.text.isNotEmpty;
 
   List<String> areas = [
+    'Análise de dados',
     'Ciência de Dados',
     'Cloud Computing',
     'Desenvolvimento Web',
@@ -46,18 +48,48 @@ class ChatController extends BaseStatus {
   }
 
   Future<void> sendMessage() async {
+    final text = inputCtrl.text;
+
     _messages.add(
       Message(
         isUser: true,
-        label: inputCtrl.text,
+        label: text,
       ),
     );
+
+    _messages.add(
+      Message(
+        isUser: false,
+        label: null,
+      ),
+    );
+
     inputCtrl.clear();
 
     setStatus(Status.loading);
     try {
+      const apiKey = 'AIzaSyD8b0z1lsEVlqo4dYHKX4Ddc0wDRjVGVew';
+      final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey);
+
+      final content = [
+        Content.text(
+            'Liste os topicos necessarios para aprender $text, sem descricao, apenas os topicos listados em ordem logica')
+      ];
+      final response = await model.generateContent(content);
+      print(response.text);
+
+      _messages.last = Message(
+        isUser: false,
+        label: response.text ??
+            'Erro ao gerar resposta, tente novamente mais tarde.s',
+      );
+
       setStatus(Status.success);
     } catch (error) {
+      _messages.last = Message(
+        isUser: false,
+        label: 'Erro ao gerar resposta, tente novamente mais tarde.',
+      );
       setStatus(Status.error);
     }
   }
