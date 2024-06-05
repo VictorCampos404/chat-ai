@@ -1,0 +1,1 @@
+ /Users/coordenacaobcc/Documents/flutter/personal/chat-ai/.dart_tool/flutter_build/0e2c8e07cc6bb86b53dfa67ae24caf90/native_assets.yaml: 

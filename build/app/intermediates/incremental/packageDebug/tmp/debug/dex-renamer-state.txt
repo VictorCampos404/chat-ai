@@ -1,0 +1,4 @@
+#Tue Jun 04 09:51:22 BRT 2024
+base.0=/Users/coordenacaobcc/Documents/flutter/ifsp/ifsp_ai/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
